@@ -13,43 +13,48 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-        }
-        #output {
-            font-size: 20px;
             text-align: center;
+            flex-direction: column;
+        }
+        #title {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        #content {
+            border: 2px solid green;
+            padding: 20px;
+            white-space: pre-wrap;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
-    <div id="output">Carregant...</div>
+    <div id="title">Projecte Aprenentatge Automàtic a través de Jocs</div>
+    <div id="content">Carregant...</div>
 
     <script>
-        async function loadIPs() {
-            const outputDiv = document.getElementById("output");
+        async function loadContent() {
+            const contentDiv = document.getElementById("content");
             try {
-                // Obtenir la IP de l'usuari (frontend)
-                const userIpResponse = await fetch("https://api64.ipify.org?format=json");
-                const userIpData = await userIpResponse.json();
-                const userIp = userIpData.ip;
+                // Obtenir el contingut de la presentació des del backend
+                const response = await fetch("https://games-service.onrender.com/api/presentacio");
+                const data = await response.json();
+                const content = data.content;
 
-                // Obtenir la IP del backend
-                const backendIpResponse = await fetch("https://games-service.onrender.com/api/backend_ip");
-                const backendIpData = await backendIpResponse.json();
-                const backendIp = backendIpData.backend_ip;
-
-                // Mostrar les IPs a la pantalla
-                outputDiv.innerHTML = `
-                    <p>IP de l'usuari: ${userIp}</p>
-                    <p>IP del servidor (backend): ${backendIp}</p>
+                // Mostrar el contingut envoltat de guionets
+                contentDiv.innerHTML = `
+                ----------------------------------------
+                ${content}
+                ----------------------------------------
                 `;
             } catch (error) {
-                outputDiv.innerHTML = "<p>Error carregant les IPs</p>";
+                contentDiv.innerHTML = "Error carregant la presentació.";
                 console.error("Error:", error);
             }
         }
 
-        // Carregar les IPs en iniciar la pàgina
-        loadIPs();
+        // Carregar el contingut en iniciar la pàgina
+        loadContent();
     </script>
 </body>
 </html>
